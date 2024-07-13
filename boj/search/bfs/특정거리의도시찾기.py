@@ -1,3 +1,6 @@
+# https://www.acmicpc.net/problem/18352
+# 특정거리의 도시찾기
+# silver 2
 import sys
 from collections import deque
 
