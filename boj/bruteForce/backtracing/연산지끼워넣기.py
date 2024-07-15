@@ -6,48 +6,29 @@ import sys
 number_count = int(sys.stdin.readline())
 
 numbers = list(map(int, sys.stdin.readline().split()))
-inputs = list(map(int, sys.stdin.readline().split()))
-operators = []
-for i in range(len(inputs)):
-    for j in range(inputs[i]):
-        if i == 0: operators.append('+')
-        if i == 1: operators.append('-')
-        if i == 2: operators.append('*')
-        if i == 3: operators.append('//')
+operators = list(map(int, sys.stdin.readline().split())) # +, -, *, //
+
+maximum = -sys.maxsize
+minimum = sys.maxsize
 
 
-def dfs(idx, visited, temp, result, depth):
-
-    first_num = numbers[0] if depth == 0 else temp
-    second_num = numbers[depth + 1]
-    operator = operators[idx]
-
-    if operator == '+':
-        temp = (first_num + second_num)
-    if operator == '-':
-        temp = (first_num - second_num)
-    if operator == '*':
-        temp = (first_num * second_num)
-    if operator == '//':
-        if first_num * second_num < 0:
-            temp = ((abs(first_num) // abs(second_num)) * -1)
-        else:
-            temp = (first_num // second_num)
-    if depth == number_count - 2:
-        result.append(temp)
+def backtracking(depth, total, plus, minus, multiply, divide):
+    global maximum, minimum
+    if depth == number_count:
+        maximum = max(maximum, total)
+        minimum = min(minimum, total)
         return
-    for j in range(number_count - 1):
-        if j not in visited:
-            visited.append(j)
-            # recc
-            dfs(j, visited, temp, result, depth + 1)
-            visited.pop()
+
+    if plus:
+        backtracking(depth + 1, total + numbers[depth], plus - 1, minus, multiply, divide)
+    if minus:
+        backtracking(depth + 1, total - numbers[depth], plus, minus - 1, multiply, divide)
+    if multiply:
+        backtracking(depth + 1, total * numbers[depth], plus, minus, multiply - 1, divide)
+    if divide:
+        backtracking(depth + 1, int(total / numbers[depth]), plus, minus, multiply, divide - 1)
 
 
-result = []
-for i in range(number_count - 1):
-    visited = [i]
-    dfs(i, visited, 0, result, 0)
-
-print(max(result))
-print(min(result))
+backtracking(1, numbers[0], operators[0], operators[1], operators[2], operators[3])
+print(maximum)
+print(minimum)
