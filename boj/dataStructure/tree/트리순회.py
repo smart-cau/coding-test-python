@@ -4,59 +4,41 @@
 import sys
 
 
-class TreeNode:
-    def __init__(self, val: str, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
+def preorder(node: str, result):
+    if node != '.':
+        result.append(node)
+        preorder(tree[node][0], result)
+        preorder(tree[node][1], result)
 
 
-def build_tree_helper(temp: TreeNode, parent: str, left: str, right: str):
-    if temp.val == parent:
-        temp.left = None if left == '.' else TreeNode(left)
-        temp.right = None if right == '.' else TreeNode(right)
-        return
-    if temp.left is not None:
-        build_tree_helper(temp.left, parent, left, right)
-    if temp.right is not None:
-        build_tree_helper(temp.right, parent, left, right)
+def inorder(node: str, result):
+    if node != '.':
+        inorder(tree[node][0], result)
+        result.append(node)
+        inorder(tree[node][1], result)
 
 
-def preorder(node: TreeNode, result):
-    if node is not None:
-        result.append(node.val)
-        preorder(node.left, result)
-        preorder(node.right, result)
-
-
-def inorder(node: TreeNode, result):
-    if node is not None:
-        inorder(node.left, result)
-        result.append(node.val)
-        inorder(node.right, result)
-
-
-def postorder(node: TreeNode, result):
-    if node is not None:
-        postorder(node.left, result)
-        postorder(node.right, result)
-        result.append(node.val)
+def postorder(node: str, result):
+    if node != '.':
+        postorder(tree[node][0], result)
+        postorder(tree[node][1], result)
+        result.append(node)
 
 
 tree_size = int(sys.stdin.readline())
-root = TreeNode('A') # tree.
+tree = {}
 
 for _ in range(tree_size):
     parent, left, right = sys.stdin.readline().split()
-    build_tree_helper(root, parent, left, right)
+    tree[parent] = [left, right]
 
 
 pre_result = []
 in_result = []
 post_result = []
-preorder(root, pre_result)
-inorder(root, in_result)
-postorder(root, post_result)
+preorder('A', pre_result)
+inorder('A', in_result)
+postorder('A', post_result)
 print(*pre_result, sep='')
 print(*in_result, sep='')
 print(*post_result, sep='')
