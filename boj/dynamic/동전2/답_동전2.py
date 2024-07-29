@@ -13,9 +13,8 @@ INF = 10e7
 dp = [INF] * (total_amount + 1)
 dp[0] = 0
 
-for amount in range(1, total_amount + 1):
-    for coin in coins:
-        if amount >= coin:
-            dp[amount] = min(dp[amount], dp[amount - coin] + 1)
+for coin in coins:
+    for amount in range(coin, total_amount + 1):
+        dp[amount] = min(dp[amount], dp[amount - coin] + 1)
 
 print(dp[total_amount] if dp[total_amount] != INF else -1)
